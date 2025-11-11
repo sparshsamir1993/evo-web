@@ -1,8 +1,16 @@
+import { buildExtensionTemplate } from "../../common/storybook/utils";
 import { Story } from "@storybook/marko";
 import { tagToString } from "../../common/storybook/storybook-code-source";
 import Readme from "./README.md";
 import Component from "./index.marko";
 import type { Input } from "./component";
+import compactLayoutComponent from "./examples/compact-layout.marko";
+import compactLayoutRaw from "./examples/compact-layout.marko?raw";
+
+import autoPlayComponent from "./examples/auto-play-viewport.marko";
+import autoPlayRaw from "./examples/auto-play-viewport.marko?raw";
+
+
 
 const Template: Story<Input> = (args) => ({
     input: {
@@ -46,6 +54,12 @@ export default {
             type: "boolean",
             control: { type: "boolean" },
             description: "True/False to mute or unmute video. Default is false",
+        },
+        layout: {
+            type: "string",
+            description:
+                'Either "default" or "compact". In "compact" layout, only play/pause, mute/unmute controls are available. Also the remaining time on the videois displayed',
+            control: { type: "text" },
         },
         playView: {
             description:
@@ -101,7 +115,14 @@ export default {
                 "The Shaka player [configuration object](https://shaka-player-demo.appspot.com/docs/api/tutorial-config.html). This allows users to control Shaka player.",
             control: { type: "object" },
         },
-
+        nav: {
+            name: "@nav",
+            table: {
+                category: "@attribute tags",
+            },
+            description:
+                "An optional object to turn the video into a link. Accepts `href` and `target` properties.",
+        },
         source: {
             name: "@source",
             table: {
@@ -300,3 +321,6 @@ mp4.parameters = {
         },
     },
 };
+export const CompactLayout =  buildExtensionTemplate(compactLayoutComponent, compactLayoutRaw);
+
+export const AutoPlayViewport =  buildExtensionTemplate(autoPlayComponent, autoPlayRaw);

@@ -4,6 +4,8 @@ $ const {
     source: sources = [],
     thumbnail,
     playView,
+    layout,
+    nav,
     a11yPlayText = "Click to play",
     a11yLoadText = "Loading",
     reportText,
@@ -31,6 +33,9 @@ $ const styleSize = {
     class=[
         "video-player",
         !state.played && thumbnail !== "" && "video-player--poster",
+        layout === "compact" && "video-player--compact",
+        nav && "video-player--with-nav",
+
     ]
     style=styleSize
 >
@@ -39,14 +44,16 @@ $ const styleSize = {
         <subscribe to=window on-resize("handleResize")/>
     </if>
     <div class="video-player__container" no-update style=styleSize>
-        <video no-controls poster=thumbnail ...processHtmlAttributes(htmlInput)>
+        <${nav ? "a" : null} ...processHtmlAttributes(nav || {})>
+            <video no-controls poster=thumbnail ...processHtmlAttributes(htmlInput)>
             <for|src| of=sources>
                 <source ...src>
             </for>
             <for|track| of=tracks>
                 <track ...track>
             </for>
-        </video>
+            </video>
+        </>
     </div>
     <div class=[
         "video-player__overlay",
