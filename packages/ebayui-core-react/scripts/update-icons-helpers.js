@@ -86,9 +86,14 @@ function saveIconComponents(svgFile) {
         `,
     );
 
+    const icons = [];
+
     symbolsData.forEach((data) => {
         const iconNameCamelCase = camelCased(data.id);
         const filename = resolve(__dirname, `../src/ebay-icon/icons/ebay-icon-${data.id}.tsx`);
+        const iconComponentName = `EbayIcon${iconNameCamelCase[0].toUpperCase()}${iconNameCamelCase.slice(1)}`;
+        icons.push({ componentName: iconComponentName, filePath: `ebay-icon-${data.id}` });
+
         writeFile(
             filename,
             dedent`
@@ -99,7 +104,7 @@ function saveIconComponents(svgFile) {
 
             const SYMBOL = \`${data.content}\`;
 
-            export const EbayIcon${iconNameCamelCase[0].toUpperCase()}${iconNameCamelCase.slice(1)}: EbayIconComponent = props => (
+            export const ${iconComponentName}: EbayIconComponent = props => (
                 <EbayIcon {...props} name="${iconNameCamelCase}" __type="${data.type}" __symbol={SYMBOL} />
             );
         `,
@@ -109,6 +114,47 @@ function saveIconComponents(svgFile) {
             },
         );
     });
+
+    const inlineStoriesFile = resolve(__dirname, "../src/ebay-icon/__tests__/inline.stories.tsx");
+
+    writeFile(
+        inlineStoriesFile,
+        dedent`
+${fileHeader}\n
+import React from "react";
+import { Meta } from "@storybook/react-vite";
+import { EbayIcon } from "../index";
+${icons.map(({ componentName, filePath }) => dedent`import { ${componentName} } from "../icons/${filePath}";`).join("\n")}
+
+export default {
+    component: EbayIcon,
+    title: "graphics & icons/ebay-icon",
+} as Meta;
+
+export const AllIcons = () => (
+    <table>
+        <tbody>
+            ${icons
+                .map(
+                    ({ componentName, filePath }) => `
+            <tr>
+                <td>${filePath}</td>
+                <td>
+                    <${componentName} />
+                </td>
+            </tr>
+                `,
+                )
+                .join("\n")}
+        </tbody>
+    </table>
+);
+    `,
+        (err) => {
+            if (err) console.error(err);
+            else console.log(`Created icon inline stories.`);
+        },
+    );
 }
 
 function generateEbaySVG(svgSymbols) {
