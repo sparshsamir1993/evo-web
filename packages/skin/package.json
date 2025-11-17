@@ -43,7 +43,7 @@
         "clean": "rimraf _cdn _site .cache .tmp .jekyll npm-debug.log.* .DS_Store",
         "copy": "npm run copy:sassToDist && npm run copy:svgToDist && npm run copy:svgToDocs && npm run copy:assetsToStorybook",
         "copy:assetsToStorybook": "tsx scripts storybook-copy",
-        "copy:sassToDist": " copyfiles src/sass/variables dist -u 2 && copyfiles src/sass/mixins/public dist/mixins -f && copyfiles src/sass/gh dist -u 2",
+        "copy:sassToDist": " copyfiles src/sass/variables dist -u 2 && copyfiles src/sass/mixins/public dist/mixins -u 4 && copyfiles src/sass/gh dist -u 2",
         "copy:svgToDist": "copyfiles src/svg dist -u 1",
         "copy:svgToDocs": "copyfiles src/svg src/routes/static -u 2 && copyfiles src/svg/icons.svg src/components/master-icons.marko -f",
         "deploy": "BASE_URL=/evo-web/skin/ marko-run build -o ./_site && npm run build:storybook && rimraf _site/public/archive && copyfiles docs/archive _site/public -u 1 && touch _site/public/.nojekyll",
