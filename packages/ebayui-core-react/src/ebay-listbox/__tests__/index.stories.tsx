@@ -44,7 +44,7 @@ const meta: Meta<typeof EbayListbox> = {
             description: "Accessible text for selected option",
             table: {
                 defaultValue: {
-                    summary: "Selected",
+                    summary: "selected",
                 },
             },
         },
